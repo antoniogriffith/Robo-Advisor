@@ -50,7 +50,7 @@ If at any point you wish to exit the program prematurely, please enter 'quit'.
 )
 
 while True:
-    symbol = input("Please enter stock symbol(s) or 'quit' to exit: ")
+    symbol = input("Please enter stock symbol or enter 'quit' to exit: ")
     symbol = symbol.upper()
 
     if(symbol == 'QUIT'):
@@ -58,11 +58,11 @@ while True:
         quit()
 
     elif (symbol in symbolList):
-        print("You have already entered this symbol!")
+        print("\nYou have already entered this symbol!")
 
     else:
         if (len(symbol) > 5 or  symbol.isalpha() == False):
-            print("Oh, expecting a properly-formed stock symbol like 'MSFT'. Please try again.\n")
+            print("Oh, expecting a properly-formed stock symbol like 'MSFT'.\n")
         else:
             request_url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + symbol + "&apikey=" + api_key
 
@@ -76,7 +76,7 @@ while True:
             errorCheck = list(parsed_response.keys())
 
             if ("Error Message" in errorCheck):
-                print("Sorry, couldn't find any trading data for that stock symbol. Please try again. \n")
+                print("Sorry, couldn't find any trading data for that stock symbol.\n")
 
             else:
 
@@ -119,16 +119,33 @@ while True:
 
                 recent_low_list.append(recent_low)
 
-    multipleEntries = input("\nWould you like to enter another stock? Enter 'yes' or 'no': ")
-    multipleEntries = multipleEntries.upper()
-
-    while (multipleEntries != "YES" and multipleEntries != "NO"):
-        print("\nINVALID  ENTRY! Please try again!")
-        multipleEntries = input("Would you like to enter another stock? Enter 'yes' or 'no': ")
+        multipleEntries = input("\nWould you like to enter another stock? Enter 'yes' or 'no': ")
         multipleEntries = multipleEntries.upper()
-    
-    if (multipleEntries == "NO"):
-        break
+
+        while (multipleEntries != "YES" and multipleEntries != "NO"):
+            print("\nINVALID  ENTRY! Please try again!")
+            multipleEntries = input("Would you like to enter another stock? Enter 'yes' or 'no': ")
+            multipleEntries = multipleEntries.upper()
+
+        if (multipleEntries == "NO"):
+            if not symbolList:
+                emptyListCheck = input("No valid data has been entered. Are you sure? Please enter 'yes' or 'no': ")
+                emptyListCheck = emptyListCheck.upper()
+
+                while (emptyListCheck != "YES" and emptyListCheck != "NO"):
+                    print("\nINVALID  ENTRY! Please try again!")
+                    emptyListCheck = input("No valid data has been entered. Are you sure? Please enter 'yes' or 'no': ")
+                    emptyListCheck = emptyListCheck.upper()
+
+                if (emptyListCheck == 'YES'):
+                    print("Exiting program now. Please come back soon! Goodbye...\n")
+                    quit()
+
+            elif (len(symbolList) > 0 ):
+                break   
+
+
+
 
 
 #
@@ -138,6 +155,7 @@ while True:
 print("\n-------------------------")
 print("REQUESTING STOCK MARKET DATA...")
 print(f"REQUEST AT: {time_of_request}") #> using datetime module
+print("PRINTING STOCK MARKET DATA...")
 print("-------------------------\n")
 
 index = 0
