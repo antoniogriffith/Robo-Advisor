@@ -57,77 +57,78 @@ while True:
         print("Exiting program now. Please come back soon! Goodbye...\n")
         quit()
 
-    if (len(symbol) > 5 or  symbol.isalpha() == False):
-        print("Oh, expecting a properly-formed stock symbol like 'MSFT'. Please try again.\n")
+    elif (symbol in symbolList):
+        print("You have already entered this symbol!")
+
     else:
-        request_url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + symbol + "&apikey=" + api_key
-
-        response = requests.get(request_url)
-        # print(type(response)) #> 'requests.models.Response'>
-        # print(response.status_code) #> 200
-        # print(response.text)
-
-        parsed_response = json.loads(response.text)
-
-        errorCheck = list(parsed_response.keys())
-
-        if ("Error Message" in errorCheck):
-            print("Sorry, couldn't find any trading data for that stock symbol. Please try again. \n")
+        if (len(symbol) > 5 or  symbol.isalpha() == False):
+            print("Oh, expecting a properly-formed stock symbol like 'MSFT'. Please try again.\n")
         else:
+            request_url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + symbol + "&apikey=" + api_key
 
-            last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
+            response = requests.get(request_url)
+            # print(type(response)) #> 'requests.models.Response'>
+            # print(response.status_code) #> 200
+            # print(response.text)
 
-            last_refreshed_list.append(last_refreshed)
+            parsed_response = json.loads(response.text)
 
-            tsd = parsed_response['Time Series (Daily)']
+            errorCheck = list(parsed_response.keys())
 
-            dates = list(tsd.keys()) # TODO: assumes first day is on top, but consider sorting to ensure
+            if ("Error Message" in errorCheck):
+                print("Sorry, couldn't find any trading data for that stock symbol. Please try again. \n")
 
-            latest_day = dates[0] #> "2021-03-05"
+            else:
 
-            high_prices = []
-            low_prices = []
-
-            for item in dates:
-                high_price = tsd[item]["2. high"]
-                high_prices.append(float(high_price))
-                low_price = tsd[item]["3. low"]
-                low_prices.append(float(low_price))
-
-            #
-            # Variables to Output
-            #
-
-            latest_close = tsd[latest_day]["4. close"] #> $1,000.00
-
-            latest_close_list.append(latest_close)
-
-            # maximum of all high prices
-            recent_high = max(high_prices)
-
-            recent_high_list.append(recent_high)
-
-            # manimum of all low prices
-            recent_low = min(low_prices)
-
-            recent_low_list.append(recent_low)
-
-            multipleEntries = input("\nWould you like to enter another stock? Enter 'yes' or 'no': ")
-            multipleEntries = multipleEntries.upper()
-
-            while (multipleEntries != "YES" and multipleEntries != "NO"):
-                print("\nINVALID  ENTRY! Please try again!")
-                multipleEntries = input("Would you like to enter another stock? Enter 'yes' or 'no': ")
-                multipleEntries = multipleEntries.upper()
-
-            if (multipleEntries == "YES"):
                 symbolList.append(symbol)
 
-            elif (multipleEntries == "NO"):
-                symbolList.append(symbol)
-                break
+                last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
 
+                last_refreshed_list.append(last_refreshed)
 
+                tsd = parsed_response['Time Series (Daily)']
+
+                dates = list(tsd.keys()) # TODO: assumes first day is on top, but consider sorting to ensure
+
+                latest_day = dates[0] #> "2021-03-05"
+
+                high_prices = []
+                low_prices = []
+
+                for item in dates:
+                    high_price = tsd[item]["2. high"]
+                    high_prices.append(float(high_price))
+                    low_price = tsd[item]["3. low"]
+                    low_prices.append(float(low_price))
+
+                #
+                # Variables to Output
+                #
+
+                latest_close = tsd[latest_day]["4. close"] #> $1,000.00
+
+                latest_close_list.append(latest_close)
+
+                # maximum of all high prices
+                recent_high = max(high_prices)
+
+                recent_high_list.append(recent_high)
+
+                # manimum of all low prices
+                recent_low = min(low_prices)
+
+                recent_low_list.append(recent_low)
+
+    multipleEntries = input("\nWould you like to enter another stock? Enter 'yes' or 'no': ")
+    multipleEntries = multipleEntries.upper()
+
+    while (multipleEntries != "YES" and multipleEntries != "NO"):
+        print("\nINVALID  ENTRY! Please try again!")
+        multipleEntries = input("Would you like to enter another stock? Enter 'yes' or 'no': ")
+        multipleEntries = multipleEntries.upper()
+    
+    if (multipleEntries == "NO"):
+        break
 
 
 #
