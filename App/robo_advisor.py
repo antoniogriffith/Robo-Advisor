@@ -158,6 +158,37 @@ while True:
             elif (len(symbolList) > 0 ):
                 break   
 
+# Investor Risk Tolerance
+print('''
+
+                                               INVESTMENT STRATEGY
+
+
+In order for us to determine an investment strategy, we must first know the investor's risk tolerance.
+
+        Aggressive: Maximizing returns by taking a high degree of risk. This strategy will focus on capital appreciation
+                    by recommending the purchase of what are commonly know as "high-growth" stocks and the liquidation of stocks
+                    with low growth opportunity.
+
+
+          Moderate: This strategy attempts to find a balance between aggressive and conservative strategies by suggesting
+                    allocation toward so-called "value" stocks. These stocks have moderate growth potential and
+                    are typically undervalued by the market. Returns on this strategy are fairly volatile in the short-term
+                    but are favorable in the long-term
+
+        
+      Conservative: Maximizing the safety of the principal investment by accepting little-to-zero risk. This strategy will
+                    suggest allocation to "sturdy" stocks - i.e. companies with a history of stable cash flows. Returns are
+                    considerably lower under this strategy.
+
+''')
+
+risk_tolerance = input("Please select an investment strategy. Enter 'Aggressive', 'Moderate, or 'Conservative': ")
+risk_tolerance = risk_tolerance.upper()
+
+while (risk_tolerance != 'AGGRESSIVE' and  risk_tolerance != 'MODERATE' and risk_tolerance != 'CONSERVATIVE'):
+    risk_tolerance = input("Invalid Entry! Please enter 'Aggressive', 'Moderate, or 'Conservative': ")
+    risk_tolerance = risk_tolerance.upper()
 
 
 
@@ -171,6 +202,7 @@ print("\n-------------------------")
 print("REQUESTING STOCK MARKET DATA...")
 print(f"REQUEST AT: {time_of_request}") #> using datetime module
 print("PRINTING STOCK MARKET DATA...")
+print(f"INVESTMENT STRATEGY: {risk_tolerance}")
 print("-------------------------")
 
 index = 0
@@ -179,6 +211,7 @@ for stock in symbolList:
     # Recommendation
     rec = ""
     reason = ""
+
 
     if (float(latest_close_list[index]) >= (1.10 * float(recent_high_list[index]))):
         rec = "Buy"
