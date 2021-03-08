@@ -17,15 +17,40 @@ api_key = os.getenv("ALPHAVANTAGE_API_KEY")
 def to_usd(my_price):
         return "${0:,.2f}".format(my_price) #>$12,000.71
 
+time_of_request = datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")
+
+symbolList = []
 
 #
 # INFO INPUTS
 #
 
-time_of_request = datetime.datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")
+
+#Welcome Message
+print("\n\nWelcome to Planalytics LLC. Securities Manangement Software!")
+print(
+'''
+The following program will recieve an entry of one or more stock tickers
+(ex, IBM, AAPL, MSFT) and produce a Buy, Sell, or Hold recommendation for each.
+
+The historical data (from the previous 100 days) will be written to a .csv file
+corresponding to each stock entered.
+
+Please be sure to enter an accurate symbol to avoid receiving an error message.
+
+-——————————————————————————————————————————————————————————————————————————————
+If at any point you wish to exit the program prematurely, please enter 'quit'.
+
+'''
+)
 
 while True:
-    symbol = input("Please enter the correct stock ticker of a company to receive a recommendation: ")
+    symbol = input("Please enter stock symbol(s) or 'quit' to exit: ")
+    symbol = symbol.upper()
+
+    if(symbol == 'QUIT'):
+        print("Exiting program now. Please come back soon! Goodbye...\n")
+        quit()
 
     if (len(symbol) > 5 or  symbol.isalpha() == False):
         print("Oh, expecting a properly-formed stock symbol like 'MSFT'. Please try again.\n")
@@ -44,7 +69,23 @@ while True:
         if ("Error Message" in errorCheck):
             print("Sorry, couldn't find any trading data for that stock symbol. Please try again. \n")
         else:
-            break
+            multipleEntries = input("Would you like to enter another stock? Enter 'yes' or 'no': ")
+            multipleEntries = multipleEntries.upper()
+
+            while (multipleEntries != "YES" and multipleEntries != "NO"):
+                print("\nINVALID  ENTRY! Please try again.")
+                multipleEntries = input("Would you like to enter another stock? Enter 'yes' or 'no': ")
+
+            if (multipleEntries == "YES"):
+                symbolList.append(symbol)
+
+            elif (multipleEntries == "NO"):
+                symbolList.append(symbol)
+                break
+
+
+
+breakpoint()
 
 last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
 
@@ -54,9 +95,6 @@ dates = list(tsd.keys()) # TODO: assumes first day is on top, but consider sorti
 
 latest_day = dates[0] #> "2021-03-05"
 
-latest_close = tsd[latest_day]["4. close"] #> $1,000.00
-
-
 high_prices = []
 low_prices = []
 
@@ -65,6 +103,14 @@ for item in dates:
     high_prices.append(float(high_price))
     low_price = tsd[item]["3. low"]
     low_prices.append(float(low_price))
+
+
+#
+# Variables to Output
+#
+
+
+latest_close = tsd[latest_day]["4. close"] #> $1,000.00
 
 # maximum of all high prices
 recent_high = max(high_prices)
