@@ -134,6 +134,22 @@ while True:
 
                 recent_low_list.append(recent_low)
 
+                # Writing Data to CSV Files
+
+                csv_file_path = os.path.join(os.path.dirname(__file__), "..", "data", f"{symbol}_prices.csv")
+
+                with open(csv_file_path, "w") as csv_file:
+                    writer = csv.DictWriter(csv_file, fieldnames = ["Timestamp", "Open", "High", "Low", "Close", "Volume"])
+                    writer.writeheader()
+
+                    for date in tsd:
+                        writer.writerow({"Timestamp": date, "Open": tsd[date]["1. open"] , 
+                                         "High": tsd[date]["2. high"], "Low": tsd[date]["3. low"], 
+                                         "Close": tsd[date]["4. close"], "Volume": tsd[date]["5. volume"]})
+
+
+
+
         multipleEntries = input("\nWould you like to enter another stock? Enter 'yes' or 'no': ")
         multipleEntries = multipleEntries.upper()
 
@@ -196,18 +212,6 @@ while (risk_tolerance != 'AGGRESSIVE' and  risk_tolerance != 'MODERATE' and risk
 #
 # INFO OUTPUTS
 #
-
-csv_file_path = os.path.join(os.path.dirname(__file__), "..", "data", "prices.csv")
-
-with open(csv_file_path, "w") as csv_file:
-    writer = csv.DictWriter(csv_file, fieldnames = ["Timestamp", "Open", "High", "Low", "Close", "Volume"])
-    writer.writeheader()
-    writer.writerow({"Timestamp": "Test 1", "Open": "Test 2", "High": "Test 3", "Low": "Test 4", "Close": "Test 5", "Volume": "Test 6"})
-
-
-
-
-
 
 print("\n-------------------------")
 print("REQUESTING STOCK MARKET DATA...")
@@ -275,7 +279,6 @@ for stock in symbolList:
 
     index += 1
 
-
-
+print(f"WRITING DATA TO CSV: {csv_file_path}...")
 print("HAPPY INVESTING!")
 print("-------------------------\n\n")
