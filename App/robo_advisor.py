@@ -59,17 +59,25 @@ while True:
 
     elif (symbol in symbolList):
         print("\nYou have already entered this symbol!")
+        
+        multipleEntries = input("\nWould you like to enter another stock? Enter 'yes' or 'no': ")
+        multipleEntries = multipleEntries.upper()
+
+        while (multipleEntries != "YES" and multipleEntries != "NO"):
+            print("\nINVALID  ENTRY! Please try again!")
+            multipleEntries = input("Would you like to enter another stock? Enter 'yes' or 'no': ")
+            multipleEntries = multipleEntries.upper()
+
+        if (multipleEntries == "NO"):
+            break
 
     else:
-        if (len(symbol) > 5 or  symbol.isalpha() == False):
+        if (len(symbol) > 5 or  (symbol.isalpha() == False  and "." not in symbol)): # Stock symbols can contain periods!
             print("Oh, expecting a properly-formed stock symbol like 'MSFT'.\n")
         else:
             request_url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + symbol + "&apikey=" + api_key
 
             response = requests.get(request_url)
-            # print(type(response)) #> 'requests.models.Response'>
-            # print(response.status_code) #> 200
-            # print(response.text)
 
             parsed_response = json.loads(response.text)
 
@@ -78,12 +86,18 @@ while True:
             if ("Error Message" in errorCheck):
                 print("Sorry, couldn't find any trading data for that stock symbol.\n")
 
+            elif ("Note" in errorCheck):
+                print('''
+                Alpha Vantage has a standard API call frequency of 5 calls per minute and 500 calls per day.
+                Please wait 30 seconds, then begin entering the data at a rate less than 5 symbols per minute.
+                ''')
+
             else:
 
                 symbolList.append(symbol)
 
                 last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
-
+                
                 last_refreshed_list.append(last_refreshed)
 
                 tsd = parsed_response['Time Series (Daily)']
@@ -156,7 +170,7 @@ print("\n-------------------------")
 print("REQUESTING STOCK MARKET DATA...")
 print(f"REQUEST AT: {time_of_request}") #> using datetime module
 print("PRINTING STOCK MARKET DATA...")
-print("-------------------------\n")
+print("-------------------------")
 
 index = 0
 for stock in symbolList:
