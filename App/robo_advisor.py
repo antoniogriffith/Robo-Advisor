@@ -166,6 +166,7 @@ while True:
 # INFO OUTPUTS
 #
 
+
 print("\n-------------------------")
 print("REQUESTING STOCK MARKET DATA...")
 print(f"REQUEST AT: {time_of_request}") #> using datetime module
@@ -174,6 +175,21 @@ print("-------------------------")
 
 index = 0
 for stock in symbolList:
+
+    # Recommendation
+    rec = ""
+    reason = ""
+
+    if (float(latest_close_list[index]) >= (1.10 * float(recent_high_list[index]))):
+        rec = "Buy"
+        reason = "Because the Stock is Hot"
+    elif (float(latest_close_list[index]) <= (0.80 * float(recent_high_list[index]))):
+        rec = "Sell"
+        reason = "Because the Stock is Cold"
+    else:
+        rec = "Hold"
+        reason = "Because the stock is neither cold nor hot"
+
     print("\n-------------------------")
     print(f"SELECTED SYMBOL: {stock}")
     print("-------------------------")
@@ -182,8 +198,8 @@ for stock in symbolList:
     print(f"RECENT HIGH: {to_usd(float(recent_high_list[index]))}")
     print(f"RECENT LOW: {to_usd(float(recent_low_list[index]))}")
     print("-------------------------")
-    print("RECOMMENDATION: BUY!")
-    print("RECOMMENDATION REASON: TODO")
+    print(f"RECOMMENDATION: {rec}")
+    print(f"RECOMMENDATION REASON: {reason}")
     print("-------------------------")
 
     index += 1
