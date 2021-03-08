@@ -1,6 +1,7 @@
 # this is the "app/robo_advisor.py" file
 
 #Modules
+import csv
 import os
 import requests
 import json
@@ -158,6 +159,7 @@ while True:
             elif (len(symbolList) > 0 ):
                 break   
 
+
 # Investor Risk Tolerance
 print('''
 
@@ -191,11 +193,20 @@ while (risk_tolerance != 'AGGRESSIVE' and  risk_tolerance != 'MODERATE' and risk
     risk_tolerance = risk_tolerance.upper()
 
 
-
-
 #
 # INFO OUTPUTS
 #
+
+csv_file_path = os.path.join(os.path.dirname(__file__), "..", "data", "prices.csv")
+
+with open(csv_file_path, "w") as csv_file:
+    writer = csv.DictWriter(csv_file, fieldnames = ["Timestamp", "Open", "High", "Low", "Close", "Volume"])
+    writer.writeheader()
+    writer.writerow({"Timestamp": "Test 1", "Open": "Test 2", "High": "Test 3", "Low": "Test 4", "Close": "Test 5", "Volume": "Test 6"})
+
+
+
+
 
 
 print("\n-------------------------")
@@ -212,16 +223,43 @@ for stock in symbolList:
     rec = ""
     reason = ""
 
+    if (risk_tolerance == 'AGGRESSIVE'):
+       
+        if (float(latest_close_list[index]) >= (1.10 * float(recent_high_list[index]))):
+            rec = "Buy"
+            reason = "Because the Stock is Hot"
+        elif (float(latest_close_list[index]) <= (0.80 * float(recent_high_list[index]))):
+            rec = "Sell"
+            reason = "Because the Stock is Cold"
+        else:
+            rec = "Hold"
+            reason = "Because the stock is neither cold nor hot"
 
-    if (float(latest_close_list[index]) >= (1.10 * float(recent_high_list[index]))):
-        rec = "Buy"
-        reason = "Because the Stock is Hot"
-    elif (float(latest_close_list[index]) <= (0.80 * float(recent_high_list[index]))):
-        rec = "Sell"
-        reason = "Because the Stock is Cold"
+    elif (risk_tolerance == 'MODERATE'):
+        
+        if (float(latest_close_list[index]) >= (1.10 * float(recent_high_list[index]))):
+            rec = "Buy"
+            reason = "Because the Stock is Hot"
+        elif (float(latest_close_list[index]) <= (0.80 * float(recent_high_list[index]))):
+            rec = "Sell"
+            reason = "Because the Stock is Cold"
+        else:
+            rec = "Hold"
+            reason = "Because the stock is neither cold nor hot"
+    
     else:
-        rec = "Hold"
-        reason = "Because the stock is neither cold nor hot"
+        
+        if (float(latest_close_list[index]) >= (1.10 * float(recent_high_list[index]))):
+            rec = "Buy"
+            reason = "Because the Stock is Hot"
+        elif (float(latest_close_list[index]) <= (0.80 * float(recent_high_list[index]))):
+            rec = "Sell"
+            reason = "Because the Stock is Cold"
+        else:
+            rec = "Hold"
+            reason = "Because the stock is neither cold nor hot"
+
+
 
     print("\n-------------------------")
     print(f"SELECTED SYMBOL: {stock}")
