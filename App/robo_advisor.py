@@ -39,6 +39,14 @@ latest_day = dates[0] #> "2021-03-05"
 latest_close = tsd[latest_day]["4. close"] #> $1,000.00
 
 
+high_prices = []
+
+for item in dates:
+    high_price = tsd[item]["2. high"]
+    high_prices.append(float(high_price))
+
+# maximum of all high prices
+recent_high = max(high_prices)
 
 
 
@@ -57,7 +65,7 @@ print("REQUEST AT: 2018-02-20 02:00pm") #> using datetime module
 print("-------------------------")
 print(f"LATEST DAY: {last_refreshed}")
 print(f"LATEST CLOSE: {to_usd(float(latest_close))}")
-print("RECENT HIGH: $101,000.00")
+print(f"RECENT HIGH: {to_usd(float(recent_high))}")
 print("RECENT LOW: $99,000.00")
 print("-------------------------")
 print("RECOMMENDATION: BUY!")
