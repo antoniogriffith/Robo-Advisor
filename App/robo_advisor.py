@@ -1,8 +1,15 @@
 # this is the "app/robo_advisor.py" file
 
 #Modules
+import os
 import requests
 import json
+from dotenv import load_dotenv
+
+load_dotenv()
+print(os.getenv("MY_SECRET_MESSAGE"))
+
+quit()
 
 
 # utility function to convert float or integer to USD-formatted string (for printing)
