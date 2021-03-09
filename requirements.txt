@@ -1,0 +1,10 @@
+# this is the "requirements.txt" file
+# it might be helpful to use pandas. if you do, uncomment the last line below ...
+
+pip
+requests
+python-dotenv
+python-dateutil
+# pandas 
+# matplotlib
+# numoy
