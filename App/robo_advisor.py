@@ -8,6 +8,7 @@ import json
 import datetime
 from dotenv import load_dotenv
 
+
 # Accessing Secret API Key Value
 load_dotenv()
 api_key = os.getenv("ALPHAVANTAGE_API_KEY")
@@ -204,21 +205,31 @@ In order for us to determine an investment strategy, we must first know the inve
 risk_tolerance = input("Please select an investment strategy. Enter 'Aggressive', 'Moderate, or 'Conservative': ")
 risk_tolerance = risk_tolerance.upper()
 
+if (risk_tolerance == 'QUIT'):
+    print("Exiting program now. Please come back soon! Goodbye...\n")
+    quit()
+
+
+
 while (risk_tolerance != 'AGGRESSIVE' and  risk_tolerance != 'MODERATE' and risk_tolerance != 'CONSERVATIVE'):
     risk_tolerance = input("Invalid Entry! Please enter 'Aggressive', 'Moderate, or 'Conservative': ")
     risk_tolerance = risk_tolerance.upper()
+
+    if (risk_tolerance == 'QUIT'):
+        print("Exiting program now. Please come back soon! Goodbye...\n")
+        quit()
 
 
 #
 # INFO OUTPUTS
 #
 
-print("\n-------------------------")
+print("\n-----------------------------------------------------------------------------------")
 print("REQUESTING STOCK MARKET DATA...")
 print(f"REQUEST AT: {time_of_request}") #> using datetime module
 print("PRINTING STOCK MARKET DATA...")
 print(f"INVESTMENT STRATEGY: {risk_tolerance}")
-print("-------------------------")
+print("-----------------------------------------------------------------------------------")
 
 index = 0
 for stock in symbolList:
@@ -229,56 +240,81 @@ for stock in symbolList:
 
     if (risk_tolerance == 'AGGRESSIVE'):
        
-        if (float(latest_close_list[index]) >= (1.10 * float(recent_high_list[index]))):
-            rec = "Buy"
-            reason = "Because the Stock is Hot"
-        elif (float(latest_close_list[index]) <= (0.80 * float(recent_high_list[index]))):
-            rec = "Sell"
-            reason = "Because the Stock is Cold"
+        if (float(latest_close_list[index]) >= (0.95 * float(recent_high_list[index]))):
+            rec = "BUY"
+            reason = ''' The stock is demonstrating upward momentum, 
+                        currently trading within 5% of
+                        its recent high. Asset offers a high-growth
+                        proposition.'''
+
+        elif (float(latest_close_list[index]) <= (0.85 * float(recent_high_list[index]))):
+            rec = "SELL"
+            reason = ''' The stock is demonstrating low growth value, 
+                        currently trading 15% or more below its recent 
+                        high. An aggressive strategy calls for the 
+                        liquidation of low-growth postions.'''
         else:
-            rec = "Hold"
-            reason = "Because the stock is neither cold nor hot"
+            rec = "HOLD"
+            reason = ''' The stock is trading within a resonable range of
+                        its recent high and should be held until its
+                        growth proposition is more clear to the market.'''
 
     elif (risk_tolerance == 'MODERATE'):
         
-        if (float(latest_close_list[index]) >= (1.10 * float(recent_high_list[index]))):
-            rec = "Buy"
-            reason = "Because the Stock is Hot"
+        if (float(latest_close_list[index]) >= (0.90 * float(recent_high_list[index]))):
+            rec = "BUY"
+            reason = ''' The stock is currently trading within
+                        10% of its recent high, offering relatively 
+                        strong growth value to an investor
+                        willing to incur moderate risk.'''
+
         elif (float(latest_close_list[index]) <= (0.80 * float(recent_high_list[index]))):
-            rec = "Sell"
-            reason = "Because the Stock is Cold"
+            rec = "SELL"
+            reason = ''' The stock is currently trading 20% or more below 
+                        its recent high, demonstrating that the 
+                        market recognizes little growth value 
+                        in the stock moving forward.'''           
         else:
-            rec = "Hold"
-            reason = "Because the stock is neither cold nor hot"
+            rec = "HOLD"
+            reason = ''' The stock is trading within a resonable range of
+                        its recent high and should be held until its
+                        growth proposition is more clear to the market.'''
     
     else:
         
-        if (float(latest_close_list[index]) >= (1.10 * float(recent_high_list[index]))):
-            rec = "Buy"
-            reason = "Because the Stock is Hot"
-        elif (float(latest_close_list[index]) <= (0.80 * float(recent_high_list[index]))):
-            rec = "Sell"
-            reason = "Because the Stock is Cold"
+        if (float(latest_close_list[index]) >= (0.85 * float(recent_high_list[index]))):
+            rec = "BUY"
+            reason = '''The stock recently closed near, or on
+                        par with its recent high. A conservative
+                        strategy focuses on principal protection 
+                        rather than growth.'''
+
+        elif (float(latest_close_list[index]) <= (0.75 * float(recent_high_list[index]))):
+            rec = "SELL"
+            reason = '''The stock is currently trading 25% lower than
+                       than its recent high, demonstrating that a 
+                       fair amount of its principal has been lost.
+                       Conservative investors should sell.'''
         else:
-            rec = "Hold"
-            reason = "Because the stock is neither cold nor hot"
+            rec = "HOLD"
+            reason = '''The stock is demonstrating relative stability, 
+                        offering predictability and consistent 
+                        returns to conservative investors. '''
 
-
-
-    print("\n-------------------------")
+    print("\n-----------------------------------------------------------------------------------")
     print(f"SELECTED SYMBOL: {stock}")
-    print("-------------------------")
+    print("-----------------------------------------------------------------------------------")
     print(f"LATEST DAY: {last_refreshed_list[index]}")
     print(f"LATEST CLOSE: {to_usd(float(latest_close_list[index]))}")
     print(f"RECENT HIGH: {to_usd(float(recent_high_list[index]))}")
     print(f"RECENT LOW: {to_usd(float(recent_low_list[index]))}")
-    print("-------------------------")
+    print("-----------------------------------------------------------------------------------")
     print(f"RECOMMENDATION: {rec}")
     print(f"RECOMMENDATION REASON: {reason}")
-    print("-------------------------")
+    print("-----------------------------------------------------------------------------------")
 
     index += 1
 
 print(f"WRITING DATA TO CSV: {csv_file_path}...")
 print("HAPPY INVESTING!")
-print("-------------------------\n\n")
+print("-----------------------------------------------------------------------------------\n\n")
