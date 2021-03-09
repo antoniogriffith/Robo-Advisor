@@ -31,7 +31,9 @@ Use Anaconda to create and activate a new virtual environment, perhaps named "st
 
 From inside the virtual environment, install packages specified in the "requirements.txt" file
 
-'pip install -r requirements.txt'
+'''
+    pip install -r requirements.txt
+'''
 
 
 ### API Setup
@@ -40,16 +42,17 @@ Visit Alpha Vantage's website at this [link](https://www.alphavantage.co/support
 
 Create a new file in this repository called .env and place inside the following contents:
 
-
-'ALPHAVANTAGE_API_KEY = "___________"'
-
+'''
+    ALPHAVANTAGE_API_KEY = "___________"
+'''
 
 ## Usage
 
 From within the virtual environment, demonstrate your ability to run the Python script from the command-line:
 
-
-'python app/robo_advisor.py'
+'''
+    python app/robo_advisor.py
+'''
 
 
 Once the program is running, follow the on-screen instructions.
