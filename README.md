@@ -20,9 +20,36 @@ Ensure that you are aware where the repository has been saved locally:
 ```sh
 cd Robo-Advisor
 ```
+### Environmental Setup
 
-Use Anaconda to create and activate a new virtual environment, perhaps named "stocks-env". From inside the virtual environment, install package 
+Use Anaconda to create and activate a new virtual environment, perhaps named "stocks-env". 
 
+'''sh
+conda create -n stocks-env python=3.8
+conda activate stocks-env
+'''
+
+From inside the virtual environment, install packages specified in the "requirements.txt" file
+'''sh
+pip install -r requirements.txt
+'''
+
+#### API Setup
+
+Visit Alpha Vantage's website at this [link](https://www.alphavantage.co/support/#api-key, "link") and obtain an API Key.
+
+Create a new file in this repository called .env and place inside the following contents:
+
+'''sh
+ALPHAVANTAGE_API_KEY = "___________"
+'''
 
 ## Usage
 
+From within the virtual environment, demonstrate your ability to run the Python script from the command-line:
+
+'''sh
+python app/robo_advisor.py
+'''
+
+Once the program is running, follow the on-screen instructions.
